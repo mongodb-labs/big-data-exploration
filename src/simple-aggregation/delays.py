@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/env python
 # Look at the cascades for arrDelay, particularly with aircrafts
 
 import pymongo

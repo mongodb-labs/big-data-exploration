@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/env python
 # Daniel Alabi, Sweetie Song
 
 import os

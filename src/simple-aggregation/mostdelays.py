@@ -1,4 +1,5 @@
-#! /usr/bin/python
+#! /usr/bin/env python
+
 # Script used to answer some or all of the following questions:
 # 1. What kinds of airplanes have the most delays? Consider arrival delay
 #    and departure delay different.
