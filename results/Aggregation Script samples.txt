@@ -1,0 +1,118 @@
+Rank the days with most flight in and out of CA in october:
+
+db.flights.aggregate({$match : {"month": 10, $or : [{origStateId : "CA"}, {destStateId : "CA"}]}}, {$group : {_id : "$dayOfMonth", flew : {$sum : 1}}}, {$sort : {flew : -1}})
+
+
+Rank the month and state from which cancelled flights occur:
+
+db.flights.aggregate({$match : {"cancelCode" : 2}}, {$group : {_id : {month : "$month", from : "$depStateId"}, num : {$sum : 1}}}, {$sort : {num : -1}}, {$limit : 5})
+
+
+Rank the days in Octoer in NY which cancelled flights due to weather occurs in descending order. Surprisingly, the number of cancelled rebounded by November 6, then the snow storm hit on the 7th.
+
+db.flights.aggregate({$match : {"cancelCode" : 2, "month" : 10, $or : [{"origStateId" : "NY"}, {"destStateId" : "NY"}]}}, {$group : {"_id" : "$dayOfMonth", sum : {$sum : 1}}}, {$sort : {sum : -1}})
+
+		{
+			"_id" : 29,
+			"sum" : 1316
+		},
+		{
+			"_id" : 30,
+			"sum" : 1239
+		},
+		{
+			"_id" : 31,
+			"sum" : 951
+		},
+		{
+			"_id" : 28,
+			"sum" : 246
+		},
+		{
+			"_id" : 14,
+			"sum" : 10
+		},
+		{
+			"_id" : 19,
+			"sum" : 6
+		},
+		{
+			"_id" : 20,
+			"sum" : 5
+		},
+		{
+			"_id" : 4,
+			"sum" : 2
+		},
+		{
+			"_id" : 3,
+			"sum" : 2
+		},
+		{
+			"_id" : 22,
+			"sum" : 1
+		},
+		{
+			"_id" : 15,
+			"sum" : 1
+		},
+		{
+			"_id" : 7,
+			"sum" : 1
+		}
+Rank the month and state from which cancelled flights occur:
+
+db.flights.aggregate({$match : {"cancelCode" : 2}}, {$group : {_id : {month : "$month", from : "$depStateId"}, num : {$sum : 1}}}, {$sort : {num : -1}}, {$limit : 5})
+Rank the days in Octoer in NY which cancelled flights due to weather occurs in descending order 
+
+db.flights.aggregate({$match : {"cancelCode" : 2, "month" : 10, $or : [{"origStateId" : "NY"}, {"destStateId" : "NY"}]}}, {$group : {"_id" : "$dayOfMonth", sum : {$sum : 1}}}, {$sort : {sum : -1}})
+
+		{
+			"_id" : 29,
+			"sum" : 1316
+		},
+		{
+			"_id" : 30,
+			"sum" : 1239
+		},
+		{
+			"_id" : 31,
+			"sum" : 951
+		},
+		{
+			"_id" : 28,
+			"sum" : 246
+		},
+		{
+			"_id" : 14,
+			"sum" : 10
+		},
+		{
+			"_id" : 19,
+			"sum" : 6
+		},
+		{
+			"_id" : 20,
+			"sum" : 5
+		},
+		{
+			"_id" : 4,
+			"sum" : 2
+		},
+		{
+			"_id" : 3,
+			"sum" : 2
+		},
+		{
+			"_id" : 22,
+			"sum" : 1
+		},
+		{
+			"_id" : 15,
+			"sum" : 1
+		},
+		{
+			"_id" : 7,
+			"sum" : 1
+		}
+

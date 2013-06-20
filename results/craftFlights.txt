@@ -1,0 +1,1 @@
+avg flights per aircraft per year : 1253.717

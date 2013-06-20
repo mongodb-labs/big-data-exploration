@@ -1,0 +1,131 @@
+Gets the 5 most delayed flights (uses both arrival delay and departure delay)
+using "mostdelayed(5)". See mostdelays.py.
+
+u'_id': ObjectId('51bb3779421aa96943a16c9c'),
+ u'arrDelay': 1823,
+ u'carrier': u'AA',
+ u'depDelay': 1831,
+ u'destCity': u'Dallas/Fort Worth, TX',
+ u'origCity': u'Orlando, FL'}
+{u'_id': ObjectId('51bb3657421aa969439932f5'),
+ u'arrDelay': 1780,
+ u'carrier': u'AA',
+ u'depDelay': 1807,
+ u'destCity': u'New York, NY',
+ u'origCity': u'Charlotte Amalie, VI'}
+{u'_id': ObjectId('51bb32a3421aa9694379cbd8'),
+ u'arrDelay': 1623,
+ u'carrier': u'AA',
+ u'depDelay': 1633,
+ u'destCity': u'Chicago, IL',
+ u'origCity': u'Fort Lauderdale, FL'}
+{u'_id': ObjectId('51bb3375421aa9694380f2d1'),
+ u'arrDelay': 1591,
+ u'carrier': u'AA',
+ u'depDelay': 1621,
+ u'destCity': u'Dallas/Fort Worth, TX',
+ u'origCity': u'Milwaukee, WI'}
+{u'_id': ObjectId('51bb321d421aa96943756628'),
+ u'arrDelay': 1623,
+ u'carrier': u'MQ',
+ u'depDelay': 1615,
+ u'destCity': u'Dallas/Fort Worth, TX',
+ u'origCity': u'Louisville, KY'}
+
+Gets the 5 most delayed flights that have information about their age
+using "mostdelayed(5, True)". See mostdelays.py.
+
+{u'_id': ObjectId('51bb300e421aa9694363296d'),
+ u'age': 86.0,
+ u'arrDelay': 87,
+ u'carrier': u'DL',
+ u'depDelay': 98,
+ u'destCity': u'Los Angeles, CA',
+ u'origCity': u'Detroit, MI'}
+{u'_id': ObjectId('51bb2fea421aa9694361e399'),
+ u'age': 34.0,
+ u'arrDelay': 42,
+ u'carrier': u'AA',
+ u'depDelay': 52,
+ u'destCity': u'Dallas/Fort Worth, TX',
+ u'origCity': u'Kahului, HI'}
+{u'_id': ObjectId('51bb2fea421aa9694361e509'),
+ u'age': 39.0,
+ u'arrDelay': 18,
+ u'carrier': u'AA',
+ u'depDelay': 49,
+ u'destCity': u'New York, NY',
+ u'origCity': u'San Francisco, CA'}
+{u'_id': ObjectId('51bb2feb421aa9694361ea98'),
+ u'age': 45.0,
+ u'arrDelay': 44,
+ u'carrier': u'AA',
+ u'depDelay': 48,
+ u'destCity': u'Kahului, HI',
+ u'origCity': u'Los Angeles, CA'}
+{u'_id': ObjectId('51bb300c421aa969436317f3'),
+ u'age': 86.0,
+ u'arrDelay': 30,
+ u'carrier': u'DL',
+ u'depDelay': 28,
+ u'destCity': u'New York, NY',
+ u'origCity': u'Atlanta, GA'}
+Notice that the planes that suffer the most delays are pretty old...
+
+Next, these are the airports that had the most departure delays
+sorted in descending order of average delay per flight.
+Used "getmostfrequentattr()" in mostdelays.py.
+
+{u'_id': u'PPG', u'delay': 68.24}
+{u'_id': u'MVY', u'delay': 39.53061224489796}
+{u'_id': u'CYS', u'delay: 33.5}
+{u'_id': u'OTH', u'delay': 31.96062992125984}
+{u'_id': u'CEC', u'delay': 31.76086956521739}
+{u'_id': u'TTN', u'delay': 27.215827338129497}
+{u'_id': u'ACV', u'delay': 22.496098104793756}
+{u'_id': u'RDD', u'delay': 20.282287822878228}
+{u'_id': u'ACK', u'delay': 18.57638888888889}
+{u'_id': u'GUM', u'delay': 17.95049504950495}
+
+
+Next, these are the airports that had the most arrival delays
+sorted in descending order of average delay per flight.
+u'_id': u'PPG', u'delay': 40.36}
+{u'_id': u'TTN', u'delay': 36.78260869565217}
+{u'_id': u'CEC', u'delay': 23.523809523809526}
+{u'_id': u'MQT', u'delay': 21.56108597285068}
+{u'_id': u'RDD', u'delay': 20.799074074074074}
+{u'_id': u'GUM', u'delay': 19.326666666666668}
+{u'_id': u'ACV', u'delay': 18.375836431226766}
+{u'_id': u'MOD', u'delay': 17.483974358974358}
+{u'_id': u'OTH', u'delay': 15.385518590998043}
+{u'_id': u'HOB', u'delay': 15.333333333333334}
+
+Next, these are the airline carriers that had the most departure delays
+sorted in descending order of average delay per flight.
+{u'_id': u'EV', u'delay': 13.422087043316742}
+{u'_id': u'UA', u'delay': 13.34711909297895}
+{u'_id': u'B6', u'delay': 11.749762347592478}
+{u'_id': u'WN', u'delay': 10.230842064580095}
+{u'_id': u'F9', u'delay': 9.775453561852194}
+{u'_id': u'AA', u'delay': 9.744635619578428}
+{u'_id': u'MQ', u'delay': 8.020676780815064}
+{u'_id': u'VX', u'delay': 7.936106692768873}
+{u'_id': u'9E', u'delay': 7.239913554979892}
+{u'_id': u'OO', u'delay': 6.578835687031485}
+
+Next, these are the airline carrier that had the most arrival delays
+sorted in descending order of average delay per flight.
+{u'_id': u'F9', u'delay': 9.847861260780094}
+{u'_id': u'EV', u'delay': 9.111481146704923}
+{u'_id': u'B6', u'delay': 7.461932141932142}
+{u'_id': u'UA', u'delay': 5.461210481802232}
+{u'_id': u'AA', u'delay': 5.1672196339743115}
+{u'_id': u'MQ', u'delay': 4.9218755782539505}
+{u'_id': u'OO', u'delay': 4.53888806017021}
+{u'_id': u'WN', u'delay': 4.277051844686016}
+{u'_id': u'YV', u'delay': 3.249499625360526}
+{u'_id': u'9E', u'delay': 2.74059545363106}
+
+What have we learned?
+ExpressJet Airlines has the most average arrival+departure delays.
