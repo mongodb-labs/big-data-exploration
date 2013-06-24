@@ -30,7 +30,9 @@ def parseFile(f):
 	recCount = 0
 	for line in f:
 
-		lineSplit = line.split(None, 1)
+		lineSplit = line.strip().split(None, 1)
+                if len(lineSplit) < 2:
+                        continue
 		firstLetter = lineSplit[0]
 
 		# the first letter denotes the type of line
@@ -43,8 +45,8 @@ def parseFile(f):
 			doc["url"] = lineSplit[1]
 
 			recCount += 1
-			if count % 100000 == 0:
-				print "Have seen " + count + " records"
+			if recCount % 100000 == 0:
+				print "Have seen " + recCount + " records"
 
 		elif firstLetter == "T":
 			pointInTime = time.strptime(lineSplit[1].rstrip(), "%Y-%m-%d %H:%M:%S")
@@ -64,6 +66,8 @@ if __name__ == "__main__":
     # Iterate through the files in the Flights directory
     month = ""
     year = ""
-    for fname in glob.glob("/shared/Memes/quotes_*" + year + "-" + month + ".txt"):
+
+    for fname in glob.glob("/Users/danielalabi/Memes/quotes_*" + year + "-" + month + "*.txt"):
+        print fname
         with open(fname, "r") as f:
         	parseFile(f)
