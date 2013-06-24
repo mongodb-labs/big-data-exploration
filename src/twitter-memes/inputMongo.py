@@ -64,6 +64,6 @@ if __name__ == "__main__":
     # Iterate through the files in the Flights directory
     month = ""
     year = ""
-    for fname in glob.glob("/shared/Memes/quotes_*" + year + "-" + month + ".txt"):    
+    for fname in glob.glob("/shared/Memes/quotes_*" + year + "-" + month + ".txt"):
         with open(fname, "r") as f:
         	parseFile(f)
