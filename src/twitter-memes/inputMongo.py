@@ -28,7 +28,7 @@ def parseFile(f):
     doc = {"quotes" : [], "links" : []}
     bulkDocs = []
 
-    recCount = 99999
+    recCount = 15280998
     for line in f:
         lineSplit = line.strip().split(None, 1)
 
@@ -64,8 +64,10 @@ def parseFile(f):
     # insert the last doc
     coll.insert(bulkDocs)
 
+
 # skip the first n nodes in the file f
-# <-> skip the first n "P"'s
+# <-> 
+# skip the first n "P"'s
 def skipsomenodes(f, n):
     c = 0
     for line in f:
@@ -84,7 +86,7 @@ if __name__ == "__main__":
     month = ""
     year = ""
 
-    for fname in glob.glob("/Users/danielalabi/Memes/quotes_*" + year + "-" + month + "*.txt"):
+    for fname in glob.glob("/data/Memes/quotes_*" + year + "-" + month + "*.txt"):
         with open(fname, "r") as f:
-            skipsomenodes(f, 99999)
+            skipsomenodes(f, 15280998)
             parseFile(f)
