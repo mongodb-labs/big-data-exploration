@@ -17,7 +17,7 @@ coll = client["twitter"]["memes"]
 For a given file f, iterate through the file to insert twitter docs
 """
 def parseFile(f):
-    """ 
+    """
     The format of each doc will be:
     "_id" : ObjectId default
     "url" : http://blogs/..." the URL/P of the document
@@ -35,16 +35,16 @@ def parseFile(f):
         if len(lineSplit) < 2: continue
 
         firstLetter = lineSplit[0]
-            
+
         # the first letter denotes the type of line
         if firstLetter == "P":
             # When there's a previous doc and this line starts a new doc, insert the old one
             if "url" in doc:
-                bulkDocs.append(doc)           
-     
-            doc = {"quotes" : [], "links" : []}            
+                bulkDocs.append(doc)
+
+            doc = {"quotes" : [], "links" : []}
             doc["url"] = lineSplit[1]
-            
+
             recCount += 1
             if recCount % 1000 == 0:
                 coll.insert(bulkDocs)
@@ -70,15 +70,15 @@ def parseFile(f):
 def skipsomenodes(f, n):
     c = 0
     for line in f:
-        if c == (n-1):            
+        if c == (n-1):
             break
 
         lineSplit = line.strip().split(None, 1)
         if len(lineSplit) < 2: continue
 
-        if lineSplit[0] == "P": 
+        if lineSplit[0] == "P":
             c += 1
- 
+
     return f
 
 if __name__ == "__main__":
@@ -88,5 +88,5 @@ if __name__ == "__main__":
 
     for fname in glob.glob("/Users/danielalabi/Memes/quotes_*" + year + "-" + month + "*.txt"):
         with open(fname, "r") as f:
-                skipsomenodes(f, 12487202)
-        	parseFile(f)
+            skipsomenodes(f, 12487202)
+            parseFile(f)
