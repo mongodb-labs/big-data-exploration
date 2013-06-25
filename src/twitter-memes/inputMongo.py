@@ -28,7 +28,7 @@ def parseFile(f):
     doc = {"quotes" : [], "links" : []}
     bulkDocs = []
 
-    recCount = 12487202
+    recCount = 99999
     for line in f:
         lineSplit = line.strip().split(None, 1)
 
@@ -49,21 +49,20 @@ def parseFile(f):
             if recCount % 1000 == 0:
                 coll.insert(bulkDocs)
                 bulkDocs = []
-                print "Have seen " + recCount + " records"
+                print "Have seen " + str(recCount) + " records"
 
-            elif firstLetter == "T":
-                pointInTime = time.strptime(lineSplit[1].rstrip(), "%Y-%m-%d %H:%M:%S")
-                doc["time"] = datetime.datetime(*pointInTime[:6])
-            elif firstLetter == "Q":
-                doc["quotes"].append(lineSplit[1])
-            elif firstLetter == "L":
-                doc["links"].append(lineSplit[1])
-            else:
-                print "ERROR:" + line
+        elif firstLetter == "T":
+            pointInTime = time.strptime(lineSplit[1].rstrip(), "%Y-%m-%d %H:%M:%S")
+            doc["time"] = datetime.datetime(*pointInTime[:6])
+        elif firstLetter == "Q":
+            doc["quotes"].append(lineSplit[1])
+        elif firstLetter == "L":
+            doc["links"].append(lineSplit[1])
+        else:
+            print "ERROR:" + line
 
     # insert the last doc
     coll.insert(bulkDocs)
-    # coll.insert(doc)
 
 # skip the first n nodes in the file f
 # <-> skip the first n "P"'s
@@ -76,9 +75,8 @@ def skipsomenodes(f, n):
         lineSplit = line.strip().split(None, 1)
         if len(lineSplit) < 2: continue
 
-        if lineSplit[0] == "P":
-            c += 1
-
+        if lineSplit[0] == "P": c += 1
+    print "skipped "+str(c)+" documents"
     return f
 
 if __name__ == "__main__":
@@ -88,5 +86,5 @@ if __name__ == "__main__":
 
     for fname in glob.glob("/Users/danielalabi/Memes/quotes_*" + year + "-" + month + "*.txt"):
         with open(fname, "r") as f:
-            skipsomenodes(f, 12487202)
+            skipsomenodes(f, 99999)
             parseFile(f)
