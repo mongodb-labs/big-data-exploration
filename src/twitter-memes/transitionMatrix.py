@@ -14,10 +14,10 @@ mpcoll = client["twitter"]["mpg_0"]
 n = 8
 pcoll = client["twitter"]["char"+str(n)]
 
-"""
-Deletes links which are dead ends
-"""
 def eraseDeadEnds():
+    """
+    Deletes links which are dead ends
+    """
     c = 0
     changed = False
     bulkData = []
@@ -45,10 +45,10 @@ def eraseDeadEnds():
 
     return changed
 
-"""
-Inserts the documents in the "pagerank" format
-"""
 def createTM():
+    """
+    Inserts the documents in the "pagerank" format
+    """
 	initialPG = 1.0 / coll.count()
 	c = 0
 	bulkData = []
