@@ -11,24 +11,27 @@ def eraseDeadEnds(numRound):
     """
     Deletes links which are dead ends
     """
-    coll = client["twitter"]["memes"+numRound]
+    coll = client["twitter"]["memes"+str(numRound)]
     roundPlusOne = numRound + 1
-    newcoll = client["twitter"]["memes"+roundPlusOne]
+    newcoll = client["twitter"]["memes"+str(roundPlusOne)]
 
     c = 0
     changed = False
     bulkData = []
 
     for doc in coll.find(timeout=False):
+        foundLinks = []
         for link in doc["value"]["links"]:
             nfound = coll.find({"_id" : link}).count()
 
-            if nfound == 0:
-                doc["value"]["links"].remove(link)
+            if nfound != 0:
+                foundLinks.append(link)
+            else:
                 changed = True
 
-        if len(doc["value"]["links"]) >= 0:
-			bulkData.append(doc)
+        if len(foundLinks) > 0:
+            doc["value"]["links"] = foundLinks
+            bulkData.append(doc)
 
         c += 1
         if c % 1000 == 0:
@@ -37,12 +40,15 @@ def eraseDeadEnds(numRound):
             bulkData = []
             print "Searched through " + str(c) + " docs so far."
 
+    if len(bulkData) > 0:
+        newcoll.insert(bulkData)
+
     return changed
 
 
 if __name__ == "__main__":
-	changed = True
-    numRound = 3
-	while (changed):
-		changed = eraseDeadEnds(numRound)
+    numRound = 69
+    changed = True
+    while (changed):
+        changed = eraseDeadEnds(numRound)
         numRound += 1
