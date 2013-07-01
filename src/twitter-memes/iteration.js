@@ -7,11 +7,11 @@ function oneiteration(n) {
     var map = function() {
         // Pass the previous pagerank and the probability matrix to myself
         emit(this["_id"], 
-                {"ptr" : this["value"]["ptr"]
+             {"ptr" : this["value"]["ptr"]
                 , "pg" : 0.0
                 , "ls" : this["value"]["ls"]
                 , "prevpg" : this["value"]["pg"] 
-                , "diff" : 1.0}
+                , "diff" : 0.0}
             );
 
         // For each node that is reachable from this node, give it the 
@@ -25,7 +25,7 @@ function oneiteration(n) {
                     , "pg" : amount 
                     , "ls" : []
                     , "prevpg" : 0.0
-                    , "diff" : 1.0}
+                    , "diff" : 0.0}
                 );
         }
     };
