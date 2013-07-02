@@ -8,11 +8,11 @@ function oneiteration(n) {
         // For each node that is reachable from this node, give it the 
         // appropriate portion of my pagerank
 	for (var toNode in this["value"]["prs"]) {
-	    emit(toNode, {nextpg : this["value"]["prs"][toNode] * this["value"]["pg"]});
+	    emit(toNode, {nextpg: this["value"]["prs"][toNode] * this["value"]["pg"]});
 	}
 	
         // Pass the previous pagerank and the probability matrix to myself
-	emit(this["_id"], {prs : this["value"]["prs"], prevpg: this["value"]["pg"]});
+	emit(this["_id"], {prs : this["value"]["prs"], prevpg : this["value"]["pg"]});
     };
     
     var reduce = function(airportId, values) {
