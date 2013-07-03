@@ -157,7 +157,7 @@ function mapdata(data) {
 
     var g = svg.append("g");
     // g.attr("transform", "scale(.6 .6)");
-    d3.json("/us-states.json", function(error, us) {
+    d3.json("./d3_files/us-states.json", function(error, us) {
 		var scolor = null;
 		g.append("g")
 		    .attr("id", "states")
