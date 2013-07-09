@@ -66,7 +66,7 @@ def parseFile(f):
 
 
 # skip the first n nodes in the file f
-# <-> 
+# <->
 # skip the first n "P"'s
 def skipsomenodes(f, n):
     c = 0
@@ -88,5 +88,4 @@ if __name__ == "__main__":
 
     for fname in glob.glob("/data/Memes/quotes_*" + year + "-" + month + "*.txt"):
         with open(fname, "r") as f:
-            skipsomenodes(f, 15280998)
             parseFile(f)
