@@ -15,25 +15,24 @@ public class PreFormatMapper
 		extends Mapper<Object, BSONObject, Text, BSONWritable> {
 
 	public void map(final Object obj,
-					final BSONObject doc, 
-					final Context context) 
+			final BSONObject doc, 
+			final Context context) 
 			throws IOException, InterruptedException {
 		
 		String url = (String) doc.get("url");
 		ArrayList<BSONObject> links = (ArrayList<BSONObject>) doc.get("links");
 		
 		HashSet<String> unique = new HashSet<String>();
-		ArrayList<String> to = new ArrayList<String>();
 		
 		for (BSONObject bbo : links) {
 			String s = (String) bbo.get("single");
-			if (unique.add(s)) {
-				to.add(s);
-			}
+			unique.add(s);
 		}
+
+		ArrayList<String> to = new ArrayList<String>(unique);
 		
 		BSONObject out = new BasicBSONObject("links", to)
-			.append("_id", url);
+		                     .append("_id", url);
 		
 		context.write(new Text(url), new BSONWritable(out));
 	}
