@@ -38,7 +38,7 @@ function oneiteration(n) {
             if ("idl" in values[i]) {
                 idl = values[i]["idl"];
                 prevpg = values[i]["prevpg"];
-                ptr = values[i]["ptr"]
+                ptr = values[i]["ptr"];
             } else { 
                 // Summation of the pagerank
                 pg += values[i]["nextpg"];
