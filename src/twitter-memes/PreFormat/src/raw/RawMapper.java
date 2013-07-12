@@ -33,9 +33,9 @@ extends Mapper<Object, BSONObject, Text, BSONWritable> {
 			}
 		}
 
-		BSONObject out = new BasicBSONObject("_id", url).
-				append("links", to).
-				append("size", links.size());
+		BSONObject out = new BasicBSONObject("_id", url)
+                                .append("links", to)
+                                .append("size", links.size());
 
 		context.write(new Text(url), new BSONWritable(out));
 	}
