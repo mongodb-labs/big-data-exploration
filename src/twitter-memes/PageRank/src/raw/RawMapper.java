@@ -15,28 +15,30 @@ extends Mapper<Object, BSONObject, Text, BSONWritable> {
     protected double setCounters(double currentPG, BSONObject value, Context context) {
         long deadEndsPG = 0;
         context.getConfiguration().getLong("deadEndsPG", deadEndsPG);
-        double distributeDeadEndsPG = ((double) deadEndsPG) / (PageRank.deadEndsFactor * PageRank.totalNodes); 
+        double distributeDeadEndsPG = ((((double) deadEndsPG) / PageRank.deadEndsFactor) * PageRank.totalNodes); 
         currentPG = PageRank.beta * (currentPG + distributeDeadEndsPG) + PageRank.distributedBeta;
         double residual = 1;
-        
+
         if (value.containsField("prevpg")) {
             double prevpg = (Double) value.get("prevpg");
-            residual = Math.abs(prevpg - currentPG) / prevpg;
+            if (prevpg != 0) {
+                residual = Math.abs(prevpg - currentPG) / prevpg;
+            }
         }
-        
+
         // Need this 10E1 because long only takes whole numbers
         context.getCounter(PageRank.RanCounters.RESIDUAL).increment((long) (residual*PageRank.residualFactor));
-        
+
         return currentPG;
     }
-    
+
     protected void map(    final Object key, 
             final BSONObject value, 
             final Context context) 
                     throws IOException, InterruptedException {
 
         Text id = new Text((String) value.get("_id"));
-        
+
         double currentPG = (Double) value.get("pg");
         currentPG = setCounters(currentPG, value, context);
         /*
@@ -48,8 +50,8 @@ extends Mapper<Object, BSONObject, Text, BSONWritable> {
 
         // Passing the object back to myself for prev comparison
         BasicBSONObject self = new BasicBSONObject("pg", 0)
-                                    .append("links", value.get("links"))
-                                    .append("prevpg", value.get("pg"));
+        .append("links", value.get("links"))
+        .append("prevpg", currentPG);
 
         context.write(id, new BSONWritable(self));
 
@@ -57,7 +59,7 @@ extends Mapper<Object, BSONObject, Text, BSONWritable> {
         if (links.size() == 0) {
             // If this is a dead end then pass the pagerank to be given to all
             context.getCounter(PageRank.RanCounters.DEAD_END_PG).
-                    increment((long) (currentPG * PageRank.deadEndsFactor));
+            increment((long) (currentPG * PageRank.deadEndsFactor));
         } else {
             // Pass the proportional pagerank out
             BasicBSONObject toEach = new BasicBSONObject("links", new BasicBSONObject()).

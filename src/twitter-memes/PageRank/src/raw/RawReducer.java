@@ -25,9 +25,9 @@ public class RawReducer extends
         // Sum the pagerank
         for (BSONWritable v : values) {
             BasicBSONObject nested = (BasicBSONObject) v.getDoc();
-            pg += nested.getDouble("pg");
+            pg += (Double) nested.get("pg");
             ls.putAll((BSONObject) nested.get("links"));
-            prevpg += nested.getDouble("prevpg");
+            prevpg += (Double) nested.get("prevpg");
         }
         
         BasicBSONObject out = new BasicBSONObject();
