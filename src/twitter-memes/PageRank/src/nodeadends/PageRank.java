@@ -19,7 +19,7 @@ public class PageRank extends Configured implements Tool{
 	
 	@Override
 	public int run(String[] arg0) throws Exception {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb ;
 		String numTrials = arg0[0];
 		String inputString = arg0[1];
 		String outputString = arg0[2];
@@ -60,20 +60,22 @@ public class PageRank extends Configured implements Tool{
 				// Calculate residuals
 				double totalResidual = ((double) job.getCounters().
 						findCounter(PageRank.RanCounters.RESIDUAL).getValue()) / 10E6;
-				double totalNodes = (double) job.getCounters().findCounter(PageRank.RanCounters.TOTAL_NODES).getValue();
-				double avgResidual = totalResidual / totalNodes;
+				double avgResidual = totalResidual / numNodes;
 				
-
+				sb = new StringBuilder();
 				sb.append("Iteration ").append(i).append(" has total residual ")
 					.append(totalResidual).append(" with avg residual ")
 					.append(avgResidual).append("\n");
 				
-				if (totalResidual < threshold * totalNodes) {
+				System.out.println(sb.toString());
+				
+				if (totalResidual < threshold * numNodes) {
 					break;
 				}
 				i += 1;
 			}
 		} catch (Exception e) {
+			sb = new StringBuilder();
 			sb.append("\n");
 			
             // Print the stack trace
@@ -85,8 +87,6 @@ public class PageRank extends Configured implements Tool{
 			
 			System.out.println(sb.toString());
 		}
-		
-		System.out.println(sb.toString());
 		return 0;
 	}
 
