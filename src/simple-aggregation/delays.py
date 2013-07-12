@@ -12,10 +12,23 @@ client = MongoClient("localhost", 27017)
 collection = client["flying"]["flights"]
 
 """
-For a given tailNum and scheduled arrival time for that flight. Find the
-number of flights that was delayed at arrival time immediately following
+It's easier to think about finding cascading delays recursively
+than iteratively. But for efficiency purposes, we decided to 
+implement the function below (findNumCascDelays) iteratively.
+
+First, we obtain the set S
+where S = { flights that left early but arrived late }
+then for every x in S, we obtain
+the number of cascading delays that x caused
+(on the same aircraft).
 """
+
+
 def findNumCascDelays(tailNum, crsArrTime):
+    """
+    tailNum -> tail number of aircraft delayed
+    crsArrTime -> scheduled arrival time for delayed aircraft
+    """
     # find all the flights by that aircraft scheduled after the first
     # arrival time
     after = collection.find({"tailNum" : tailNum,
@@ -25,7 +38,7 @@ def findNumCascDelays(tailNum, crsArrTime):
         return 0
     else:
         num = 0
-        # too many trips to use iter
+
         for trip in after:
             if ("depDelay" in trip and "arrDelay" in trip \
                     and "lateAircraftDelay" in trip ):

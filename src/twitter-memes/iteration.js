@@ -5,49 +5,60 @@
  */
 function oneiteration(n) {
     var map = function() {
-        // For each node that is reachable from this node, give it the 
-        // appropriate portion of my pagerank
-        for (var toNode in this["value"]["idl"]) {
-            emit(toNode, {nextpg : this["value"]["ptr"] * this["value"]["pg"]});
-        }
-        
         // Pass the previous pagerank and the probability matrix to myself
         emit(this["_id"], 
-            {idl : this["value"]["idl"], 
-            prevpg: this["value"]["pg"], 
-            ptr : this["value"]["ptr"]}
+                {"ptr" : this["value"]["ptr"]
+                , "pg" : 0.0
+                , "ls" : this["value"]["ls"]
+                , "prevpg" : this["value"]["pg"] 
+                , "diff" : 1.0}
             );
-        
-        // TODO AN EXTRA PLACEHOLDER
-        // An extra emit to myself so that the reducer is called
-        // emit(this["_id"], {prs : this["value"]["prs"], prevpg: this["value"]["pg"]});
+
+        // For each node that is reachable from this node, give it the 
+        // appropriate portion of my pagerank
+        for (var i = 0 ; i < this["value"]["ls"].length ; i++) {
+            var toNode = this["value"]["ls"][i];
+            var amount = this["value"]["ptr"] * this["value"]["pg"];
+
+            emit(toNode, 
+                    {"ptr" : 0.0 
+                    , "pg" : amount 
+                    , "ls" : []
+                    , "prevpg" : 0.0
+                    , "diff" : 1.0}
+                );
+        }
     };
         
     var reduce = function(idURL, values) {
-        var pg = 0
+        var ptr = 0.0
+        , pg = 0.0
         , diff = 0
-        , prs = null
-        , prevpg = 0 
+        , ls = []
+        , prevpg = 0.0 
         , beta = 0.9
-        , all = 15312737; 
+        , all = 102000; 
         // TODO: This needs to be changed to the correct number of airports
         // Which remember, cannot be computed at reduce time. Hard Coded Only
         
         for (var i in values) {
+            // Summation of the pagerank
+            pg += values[i]["pg"];
+
             // Retrieve the previous pagerank and the probability matrix
-            if ("idl" in values[i]) {
-                idl = values[i]["idl"];
-                prevpg = values[i]["prevpg"];
-                ptr = values[i]["ptr"];
-            } else { 
-                // Summation of the pagerank
-                pg += values[i]["nextpg"];
-            }
+            ls = ls.concat(values[i]["ls"]);
+            prevpg += values[i]["prevpg"];
+            ptr += values[i]["ptr"];
         }
         
         pg = beta * pg + (1-beta) / all;
         diff = Math.abs(prevpg - pg) / prevpg;
-        return {"pg" : pg, "idl" : idl, "diff": diff, "prevpg" : prevpg, "ptr" : ptr};
+        return {
+            "ptr" : ptr
+            , "pg" : pg 
+            , "ls" : ls
+            , "prevpg" : prevpg
+            , "diff" : diff};
     };
     
     db["mpg_"+n].mapReduce(map, reduce, {out : "mpg_"+(n+1)});
