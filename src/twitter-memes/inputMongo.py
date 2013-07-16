@@ -13,11 +13,9 @@ client = MongoClient("localhost", 27017)
 coll = client["twitter"]["memes"]
 
 
-"""
-For a given file f, iterate through the file to insert twitter docs
-"""
 def parseFile(f):
     """
+    For a given file f, iterate through the file to insert twitter docs
     The format of each doc will be:
     "_id" : ObjectId default
     "url" : http://blogs/..." the URL/P of the document
@@ -69,6 +67,11 @@ def parseFile(f):
 # <->
 # skip the first n "P"'s
 def skipsomenodes(f, n):
+    """
+    skip the first n nodes in the file f
+    <->
+    skip the first n "P"'s
+    """
     c = 0
     for line in f:
         if c == (n-1):
