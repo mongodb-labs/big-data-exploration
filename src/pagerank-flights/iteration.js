@@ -13,10 +13,6 @@ function oneiteration(n) {
 	
         // Pass the previous pagerank and the probability matrix to myself
 	emit(this["_id"], {prs : this["value"]["prs"], prevpg: this["value"]["pg"]});
-	
-        // TODO AN EXTRA PLACEHOLDER
-        // An extra emit to myself so that the reducer is called
-        // emit(this["_id"], {prs : this["value"]["prs"], prevpg: this["value"]["pg"]});
     };
     
     var reduce = function(airportId, values) {
@@ -59,8 +55,6 @@ function pagerank(eps) {
         oneiteration(n);
         n += 1;
 	
-        // :::TODO:::
-        // This query can be changed into map reduce, but it's a placeholder
         res = db["fpg_"+n].aggregate(
             {"$group" : {"_id" : 1, "totalDiff" : {"$sum" : "$value.diff"}}}
         );
@@ -73,5 +67,7 @@ function pagerank(eps) {
     return n - 1;
 }
 
+var startTime = Date.now();
 n = pagerank(0.001);
 print("converged after "+n+" iterations");
+print("took " + (Date.now()-startTime)/1000 + " seconds");
