@@ -158,7 +158,7 @@ function mapdata(data) {
     .on("click", clicked);
 
     var g = svg.append("g");
-    d3.json("/us-states.json", function(error, us) {
+    d3.json("./d3_files/us-states.json", function(error, us) {
 		var scolor = null;
 		g.append("g")
 		    .attr("id", "states")
