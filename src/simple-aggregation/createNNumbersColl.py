@@ -6,7 +6,8 @@ import csv
 from pymongo import MongoClient
 
 client = MongoClient("localhost", 27017)
-coll = client["flying"]["nnumbers"]
+newcoll = client["flying"]["nnumbers"]
+flightscoll = client["flying"]["flights"]
 
 # fields to include
 # note: "n-number" is assumed to start with an N
@@ -25,6 +26,12 @@ def lsToDoc(ls):
     # yearMfr should be stored as an integer
     if len(doc["yearMfr"]) > 0:
         doc["yearMfr"] = int(doc["yearMfr"])
+        # calculate age of flights
+        age = 2013 - doc["yearMfr"]
+        # store in flights collection in flying database
+        flightscoll.update( { "tailNum": "N"+doc["nNumber"] }
+                          , {"$set": {"age" : age}}
+                          , multi= True)
     else:
         del doc["yearMfr"]
 
@@ -45,6 +52,7 @@ if __name__ == "__main__":
         reader = csv.reader(f, delimiter=",")
         for line in reader:
             doc = lsToDoc(line)
+            # store in collection, just in case, we need to re-use
             if len(doc) > 0:
-                coll.insert(doc)
+                newcoll.insert(doc)
         
