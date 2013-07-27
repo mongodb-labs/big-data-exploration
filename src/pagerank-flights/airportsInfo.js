@@ -6,7 +6,7 @@
 //              , airportCity: "New York, NY"}
 var getAirportsInfo = function() {
     var airportInfo = {}
-    , n = 19; // last iteration of PageRank
+    , n = 40; // last iteration of PageRank
     
     var airportNodes = db["fpg_"+n].find()
     , flightInfo, id, airportNode;
