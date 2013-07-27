@@ -11,27 +11,27 @@ import com.mongodb.hadoop.io.BSONWritable;
 
 public class NoDeadEndsReducer 
 extends Reducer<Text, BSONWritable, Text, BSONWritable>{
-	
-	public void reduce( final Text id, 
-			final Iterable<BSONWritable> values,
-			final Context context ) 
-					throws IOException, InterruptedException {
+    
+    public void reduce( final Text id, 
+            final Iterable<BSONWritable> values,
+            final Context context ) 
+                    throws IOException, InterruptedException {
 
-		ArrayList<String> links = new ArrayList<String>();
-		int numLinks = 0;
+        ArrayList<String> links = new ArrayList<String>();
+        int numLinks = 0;
 
-		// Aggregate all the values for this key
-		for (BSONWritable v : values) {
-			BasicBSONObject o = (BasicBSONObject) v.getDoc();
-			links.addAll((ArrayList<String>) o.get("links"));
-			numLinks += (Integer) o.get("size");
-		}
+        // Aggregate all the values for this key
+        for (BSONWritable v : values) {
+            BasicBSONObject o = (BasicBSONObject) v.getDoc();
+            links.addAll((ArrayList<String>) o.get("links"));
+            numLinks += (Integer) o.get("size");
+        }
 
-		BasicBSONObject lastly = new BasicBSONObject("_id", id.toString()).
-				append("links", links).
-				append("pg", 1.0 / pre.PreFormat.totalNodes).
-				append("ptr", 1.0 / numLinks);
+        BasicBSONObject lastly = new BasicBSONObject("_id", id.toString())
+                                        .append("links", links)
+                                        .append("pg", 1.0 / pre.PreFormat.totalNodes)
+                                        .append("ptr", 1.0 / numLinks);
 
-		context.write(id, new BSONWritable(lastly));
-	}
+        context.write(id, new BSONWritable(lastly));
+    }
 }
