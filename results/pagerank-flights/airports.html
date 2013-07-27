@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <style type="text/css">
+
+#states path {
+  fill: #ccc;
+  stroke: #fff;
+}
+
+path.arc {
+  pointer-events: none;
+  fill: none;
+  stroke: #000;
+  display: none;
+}
+
+path.cell {
+  fill: none;
+  pointer-events: all;
+}
+
+circle {
+  fill: steelblue;
+  fill-opacity: .8;
+  stroke: #fff;
+}
+
+#cells.voronoi path.cell {
+  stroke: brown;
+}
+
+#cells g:hover path.arc {
+  display: inherit;
+}
+
+h3 {
+  margin-left: 100px;
+  margin-bottom: 10px;
+  color: #3333ff;
+  font-family: "Century Gothic", sans-serif;
+}
+
+p {
+ margin-left : 0;
+ color: #1111ff;
+ font-size: 20px;
+ font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+body {
+ padding-top: 0;
+ margin-top: 0;
+}
+
+    </style>
+  </head>
+  <body>
+    <h2>
+      <span>U.S. commercial airports</span><br>
+	  <span>PageRank of Commercial airports</span>
+    </h2>
+    <script type="text/javascript" src="./d3.js"></script>
+    <script type="text/javascript" src="./d3.csv.js"></script>
+    <script type="text/javascript" src="./d3.geo.js"></script>
+    <script type="text/javascript" src="./d3.geom.js"></script>
+	<script type="text/javascript" src="./airportPageRanks.js"></script>
+    <script type="text/javascript" src="./d3pagerankdisplay.js"></script>
+  </body>
+</html>
