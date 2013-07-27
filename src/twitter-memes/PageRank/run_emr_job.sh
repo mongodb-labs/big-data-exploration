@@ -8,6 +8,6 @@ elastic-mapreduce --create --jobflow NoDeadEnds \
     --log-uri s3://$S3_BUCKET/logs \
     --jar s3://$S3_BUCKET/allMemesPageRank.jar \
     --arg 0 \
-    --arg s3n://$S3_BUCKET/output/originalMemes/format/ \
+    --arg s3n://$S3_BUCKET/dump/twitter/original/formatted.bson \
     --arg s3n://$S3_BUCKET/output/originalMemes/pagerank/ \
     --arg -D --arg bson.output.build_splits=true \

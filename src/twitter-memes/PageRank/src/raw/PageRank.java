@@ -15,7 +15,7 @@ public class PageRank extends Configured implements Tool{
     public static double threshold = 0.001;
     public static double totalNodes = 36851289.0;
     public static double distributedBeta = (1-beta)/totalNodes;
-    public static double residualFactor = 10E1;
+    public static double residualFactor = 10E7;
     public static double deadEndsFactor = 10E7;
     
     public static enum RanCounters {DEAD_END_PG, RESIDUAL, TOTAL_NODES};
