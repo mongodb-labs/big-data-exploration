@@ -4,16 +4,18 @@
 import pymongo
 import datetime
 import pprint
+import os
 
 from bson.code import Code
 from pymongo import MongoClient
 
+portNum = int(os.environ["PORT"])
 client = MongoClient("localhost", 27017)
 collection = client["flying"]["flights"]
 
 """
 It's easier to think about finding cascading delays recursively
-than iteratively. But for efficiency purposes, we decided to 
+than iteratively. But for efficiency purposes, we decided to
 implement the function below (findNumCascDelays) iteratively.
 
 First, we obtain the set S
@@ -52,7 +54,7 @@ def findNumCascDelays(tailNum, crsArrTime):
 if __name__ == "__main__":
     # find all the flights that leave on time but arrive late, thereby causing
     # cascading delays
-    first = collection.find({"depDelay" : {"$lte":0}, "arrDelay" : {"$gt" : 0}})
+    first = collection.find({"depDelay" : {"$lte":0}, "arrDelay" : {"$gt" : 0}}, timeout=False)
 
     num = 0
     delays = 0
@@ -60,6 +62,5 @@ if __name__ == "__main__":
         delays += findNumCascDelays(doc["tailNum"], doc["crsArrTime"])
         num += 1
         if num % 10000 == 0:
-            print doc["_id"]
-    print delays
-    print float(delays) / float(num)
+            print num, "late arrival flights have caused", delays, "delays"
+    print "On average, per late flight causes", float(delays) / float(num), "cascading delays"
