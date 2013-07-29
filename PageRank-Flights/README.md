@@ -1,17 +1,18 @@
 PageRank-Flights
 ================
 
-In this portion, we will show how to use the MongoDB Aggregation Framework's MapReduce over the flights dataset. Each node in PageRank will correspond to an airport. 
+In this portion, we will show how to use MongoDB's MapReduce and Aggregation frameworks to compute PageRank on the flights dataset. Each node in PageRank will correspond to an airport. 
 
-There is an in-depth [wiki-page](http://github.com/10gen-interns/big-data-exploration/wiki/Pagerank-on-Flights-Dataset) for the actions and analysis of this dataset. Please refer to it for more details of the project, including the reasons behind the scripts and explanations of the analysis.
+There is an in-depth [wiki-page](http://github.com/10gen-interns/big-data-exploration/wiki/Pagerank-on-Flights-Dataset) that details the steps we took to compute the PageRank of the commercial airports in the Flights dataset. The wiki page also describes what the various scripts in this repository do.
 
 ### Dependencies
-* pymongo (`pip install pymongo`)
-
-### Resources
-Please have the flights.zip from the Basic-Flights resources directory imported according to the instructions there. There's no need for the age/nnumber for this portion.
+* pymongo (`pip install pymongo` or `easy_install pymongo`) : >= 2.5
+* python : >= 2.5, < 3.0
+* MongoDB : >= 2.2
 
 ### Preformating
+
+We assume that you've gone through the steps to import the Flights dataset into the _flights_ collection in the _flying_ database; if not, see `Basic-Flights/REAME.md`.
 
 Currently each doc is for every flight, but our PageRank algorithm depends on an airport. The *transitionMatrix.py* script in src converts the flight documents into documents based on airports. It also formats the output as "value", which smoothes the transition to using the MongoDB MapReduce framework, since all outputs are labeled as "value". Lastly, the script also creates a transition matrix which tells the probability of going from that airport to any other airport (See [PageRank explanation](http://github.com/10gen-interns/big-data-exploration/wiki/PageRank-on-Flights-Dataset#making-a-graph-of-airports)). This script takes around 6 minutes. 
 
