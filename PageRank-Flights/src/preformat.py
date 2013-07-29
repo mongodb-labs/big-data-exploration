@@ -3,11 +3,16 @@
 import pymongo
 import pprint
 import os
+import sys
 
 from pymongo import MongoClient
 
+try:
+    portNum = int(os.environ["PORT"])
+except KeyError:
+    print "Please set the environment variable $PORT"
+    sys.exit(1)
 
-portNum = int(os.environ["PORT"])
 client = MongoClient("localhost", portNum)
 coll = client["flying"]["flights"]
 newcoll = client["flying"]["fpg_0"]
