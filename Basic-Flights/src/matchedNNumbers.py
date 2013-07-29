@@ -7,12 +7,17 @@ import time
 import pprint
 import csv
 import glob
-
+import sys
 
 from pymongo import MongoClient
-# Get the environment variables for the port number and the directory for the flights csv file
-portNum = int(os.environ["PORT"])
-flightsDir = os.environ["FLIGHTS"]
+
+try:
+    # Get the environment variables for the port number and the directory for the flights csv file
+    portNum = int(os.environ["PORT"])
+    flightsDir = os.environ["FLIGHTS"]
+except KeyError:
+    print "Please set the environment variables $PORT and $FLIGHTS"
+    sys.exit(1)
 
 # Start a connection to the mongod instance
 client = MongoClient("localhost", portNum)

@@ -16,10 +16,16 @@ Script used to render the data that's used for the d3 display:
 import datetime, time
 import pprint
 import os
+import sys
 
 from pymongo import MongoClient
 
-portNum = int(os.environ["PORT"])
+try:
+    portNum = int(os.environ["PORT"])
+except KeyError:
+    print "Please set the environment variable $PORT"
+    sys.exit(1)
+
 client = MongoClient("localhost", portNum)
 flights = client["flying"]["flights"]
 

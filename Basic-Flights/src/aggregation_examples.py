@@ -15,10 +15,16 @@ Script used to answer some or all of the following questions:
 import datetime, time
 import pprint
 import os
+import sys
 
 from pymongo import MongoClient
 
-portNum = int(os.environ["PORT"])
+try:
+    portNum = int(os.environ["PORT"])
+except KeyError:
+    print "Please set the environment variables $PORT"
+    sys.exit(1)
+
 client = MongoClient("localhost", portNum)
 flights = client["flying"]["flights"]
 

@@ -5,11 +5,17 @@ import pymongo
 import datetime
 import pprint
 import os
+import sys
 
 from bson.code import Code
 from pymongo import MongoClient
 
-portNum = int(os.environ["PORT"])
+try:
+    portNum = int(os.environ["PORT"])
+except KeyError:
+    print "Please set the environment variable $PORT"
+    sys.exit(1)
+
 client = MongoClient("localhost", 27017)
 collection = client["flying"]["flights"]
 
