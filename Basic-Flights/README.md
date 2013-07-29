@@ -1,21 +1,22 @@
 Basic-Flights
 =============
 
-There is an in-depth [wiki page](http://github.com/10gen-interns/big-data-exploration/wiki/Basic-Analysis-on-Flights-Dataset) for actions and analysis of this dataset. Please refer to it for more details of the project, including the reasons behind the scripts and explanations of the sample analysis. 
+There is an in-depth [wiki page](http://github.com/10gen-interns/big-data-exploration/wiki/Basic-Analysis-on-Flights-Dataset) that details the steps we took to 
+analyze the Flights dataset and what the various scripts in this repository do.
 
 ### Dependencies
-* pymongo (`pip install pymongo`)
+* pymongo (`pip install pymongo` or `easy_install pymongo`)
 
 ### Resources
 
 All the resources are zipped in the resources directory. 
 
-Our sample dataset flights.zip is available in the resources directory. The dataset is 234MB zipped and it covers April 2012-March 2013, which is the most recent 12 months worth of data at the time of the project. You may also choose to download your own dataset from from the [Bureau of Transportation Statistics](http://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236). However, it is imperative that your data include all the columns listed in [this
-gist](http://gist.github.com/sweetieSong/60167000), because these fields are crucial to our analysis.
+Our sample dataset _flights.zip_ is available in the resources directory. The dataset is 234MB zipped and it covers April 2012-March 2013, which was the most recent 12 months worth of data at start of the project. You may also choose to download your own dataset from from the [Bureau of Transportation Statistics](http://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236). However, it is imperative that your data include all the columns listed in [this
+gist](http://gist.github.com/sweetieSong/6016700), because these fields are crucial to our analysis.
 
-MatchedNNumbers.csv is a file of NNumbers matching the aircrafts that is in flights.zip. This is useful because it's significantly smaller than MASTER.txt.
+_MatchedNNumbers.csv_ is a file of NNumbers matching the aircrafts that is in flights.zip. This is useful because it's significantly smaller than MASTER.txt.
 
-MASTER.txt is the master registry of all aircrafts, it includes all details of every aircraft ever registered. 
+_MASTER.txt_ is the master registry of all aircrafts, it includes all details of every aircraft ever registered. 
 
 ### Importing the Data into MongoDB
 
