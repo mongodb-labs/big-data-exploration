@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env bash
 
 # Program Requirements:
 # 1. s3cmd -> (download here: http://s3tools.org/s3cmd)

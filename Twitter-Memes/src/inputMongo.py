@@ -1,5 +1,4 @@
 #! /usr/bin/env python
-# Daniel & Sweet
 
 import os
 import datetime
@@ -9,7 +8,17 @@ import glob
 
 from pymongo import MongoClient
 
-client = MongoClient("localhost", 27017)
+portNum = 27017
+memesDir = ""
+# Get the environ variables for the port num and directory for the quotes txt file(s)
+try:
+    portNum = int(os.environ["PORT"])
+    memesDir = os.environ["MEMES"]
+except KeyError:
+    print "Please set the environment variables $PORT and $MEMES."
+    sys.exit(1)
+
+client = MongoClient("localhost", portNum)
 coll = client["twitter"]["memes"]
 
 
@@ -26,10 +35,11 @@ def parseFile(f):
     doc = {"quotes" : [], "links" : []}
     bulkDocs = []
 
-    recCount = 15280998
+    recCount = 0
     for line in f:
         lineSplit = line.strip().split(None, 1)
 
+        # Skip invalid lines
         if len(lineSplit) < 2: continue
 
         firstLetter = lineSplit[0]
@@ -40,16 +50,16 @@ def parseFile(f):
             if "url" in doc:
                 bulkDocs.append(doc)
 
-            doc = {"quotes" : [], "links" : []}
-            doc["url"] = lineSplit[1]
+            doc = {"_id" : lineSpit[1], "quotes" : [], "links" : []}
 
-            recCount += 1
-            if recCount % 1000 == 0:
+            if len(bulkDocs) % 10000 == 0:
+                recCount += 10000
                 coll.insert(bulkDocs)
                 bulkDocs = []
-                print "Have seen " + str(recCount) + " records"
+                print "Have seen and inserted " + str(recCount) + " records"
 
         elif firstLetter == "T":
+            # Get the time of the post
             pointInTime = time.strptime(lineSplit[1].rstrip(), "%Y-%m-%d %H:%M:%S")
             doc["time"] = datetime.datetime(*pointInTime[:6])
         elif firstLetter == "Q":
@@ -63,19 +73,17 @@ def parseFile(f):
     coll.insert(bulkDocs)
 
 
+# This is useful if the mongod instance disconnects and needs to
+# continue inserting after a certain known point
 # skip the first n nodes in the file f
 # <->
 # skip the first n "P"'s
 def skipsomenodes(f, n):
-    """
-    skip the first n nodes in the file f
-    <->
-    skip the first n "P"'s
-    """
     c = 0
     for line in f:
         if c == (n-1):
             break
+        c += 1
 
         lineSplit = line.strip().split(None, 1)
         if len(lineSplit) < 2: continue
@@ -84,11 +92,12 @@ def skipsomenodes(f, n):
     print "skipped "+str(c)+" documents"
     return f
 
+
 if __name__ == "__main__":
     # Iterate through the files in the Flights directory
-    month = ""
-    year = ""
 
-    for fname in glob.glob("/data/Memes/quotes_*" + year + "-" + month + "*.txt"):
+    for fname in glob.glob(memesDir + "/quotes_*.txt"):
         with open(fname, "r") as f:
+            # might need skipsomenodes(f, n) if resuming from previous point
             parseFile(f)
+            print "====== FINISHED IMPORTING TWITTER MEMES ======"
