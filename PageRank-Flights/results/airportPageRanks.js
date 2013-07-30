@@ -32,6 +32,6 @@ var pageranks = function(n, sortBy) {
     .slice(0,n);
 };
 
-// console.log(mostPageRank(10));
-// console.log(leastPageRank(10));
-// console.log(mostPageRank(318));
+// print(mostPageRank(10));
+// print(leastPageRank(10));
+// print(mostPageRank(318));
