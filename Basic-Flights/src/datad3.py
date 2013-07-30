@@ -20,6 +20,7 @@ import sys
 
 from pymongo import MongoClient
 
+portNum = 27017
 try:
     portNum = int(os.environ["PORT"])
 except KeyError:
