@@ -2,9 +2,10 @@
 // Return the corresponding quotes associated 
 // with these pages
 
+var database = "pagerankResults";
 
 var pagesWithMostPageRank = function(n, withHttp)  {
-    var res = db.no_dead_ends_pg.find().sort({"pg" : -1}).limit(n)
+    var res = db[database].find().sort({"pg" : -1}).limit(n)
     , page, o
     , results = [];
 
