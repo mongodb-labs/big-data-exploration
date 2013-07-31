@@ -10,6 +10,8 @@ import sys
 
 from pymongo import MongoClient
 
+portNum = 27017
+flightsDir = ""
 try:
     # Get the environment variables for the port number and the directory for the flights csv file
     portNum = int(os.environ['PORT'])

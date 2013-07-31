@@ -18,11 +18,11 @@ There are two ways to import the data.
 #### MongoRestore with BSON 
 Download the bson file [flights.bson.zip](http://s3.amazonaws.com/big-data-wiki/flights.bson.zip). 
 
-Run `mongorestore --db flying --collection flights --port $PORT <PATH TO>/flights.bson` to import the BSON file into the collection `flights` of the database `flying`. 
+Run `mongorestore --db flying --collection flights --port $PORT <PATH TO>/flights.bson` to import the BSON file into the collection *flights* of the database *flying*. 
 
 #### Use our Input Scripts
 
-Download the file [flights.zip](http://s3.amazonaws.com/big-data-wiki/flights.zip) and unzip it. Export the variable `$FLIGHTS` as the path to the directory where all the csv from the flights.zip is stored. 
+Download the file [flights.zip](http://s3.amazonaws.com/big-data-wiki/flights.zip) and unzip it. Export the variable `$FLIGHTS` as the path to the directory where all the csv from the flights.zip is stored (ie, `export FLIGHT=/User/Downloads/flight`). 
 
 Execute the `src/inputMongo.py` script, it should take around 21 minutes to finish. It'll create a collection *flights* in the db *flying* with 6,155,748 documents.
 
