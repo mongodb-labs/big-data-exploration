@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env bash
 
 # Program Requirements:
 # 1. s3cmd -> (download here: http://s3tools.org/s3cmd)
@@ -32,7 +32,7 @@ MAX_ITER=200
 #    /output
 #       /erasedDeadEnds0.bson
 #          
-BUCKET="memes-bson"
+BUCKET=$BUCKET
 
 # elastic-mapreduce path
 EMR_PATH="elastic-mapreduce-ruby/elastic-mapreduce"
