@@ -7,18 +7,32 @@ There is an in-depth [wiki-page](http://github.com/10gen-interns/big-data-explor
 
 ### Dependencies
 * pymongo (`pip install pymongo` or `easy_install pymongo`) : >= 2.5
+* tldextract (`pip install tldextract`)
 * MongoDB : >= 2.2
 * Java : 1.6
+* [mongo-hadoop](http://github.com/mongodb/mongo-hadoop)
 * Amazon Web Service Account : Our examples utilize AWS, but you can possibly run it locally instead with minor changes.
 * [elastic-map-reduce client] (http://github.com/tc/elastic-mapreduce-ruby) 
 * [s3cmd](http://s3tools.org/s3cmd)
 
+### Setup
+Export the variable `$BUCKET` to the amazon bucket location (ie, `export BUCKET=memes-bson`) where all your computations will take place. Build your mongo-hadoop and upload your build jars to an amazon bucket.
+
 ### Importing the Data into MongoDB
+
+We have made all of our jar files necessary for hadoop and mongo-hadoop public in our memes-bson s3 bucket and they also exist in the repo. You can either copy these jars into your own bucket and make them public, or build your own jars, upload them and make them public. 
+
+If you choose to use our files, run *src/update_s3.sh*. This script uploads all the necessary jar files and bootstrap scripts to s3 and make them public.  
+
+If you choose to utilize Amazon Web Service, you don't need to import the data locally, but this will show you how. Either way, remember the number of documents in your dataset, **TOTAL_DOCS**. 
+
+======
 
 You must have an instance of MongoDB running locally. Export the port number of the running mongod instace as `$PORT` (ie, `exporrt PORT=27017`).
 
 There are two ways to import the data.
-======
+
+------
 
 #### MongoRestore with BSON
 Download the bson file [memes.bson.zip](http://s3.amazonaws.com/big-data-wikie/memes.bson.zip) and unzip it.
@@ -36,27 +50,29 @@ The only really important field is the `url` which becomes the `_id` in out inpu
 ### Prepping for PageRank
 
 There's two different inputs to the PageRank algorithm:
-* A graph with no dead ends - to make this type of graph, following the instructions below.
 * Any graph - Skip to Preformat
+* A graph with no dead ends - to make this type of graph, following the instructions below.
 
 To create a graph with no dead ends, all the dead ends must be erased, along with all the edges to those dead ends, and repeat until there are no dead ends.
 
-The src/RemoveDeadEnds does exactly that. ~~~TODO DANIEL WRITE HERE ~~~ 
-
-We have made all of our jar files necessary for hadoop and mongo-hadoop public in out memes-bson s3 bucket. You can either leave the references in place, or download them and copy them to your own bucket.
+The src/RemoveDeadEnds directory contains tools that do exactly that. Call src/RemoveDeadEnds/removeAllDeadEnds.sh. This might take over 5 hours and over 70 iterations. 
 
 ### Pre-Formating the Flights Dataset
 
-We assume that you've gone through the steps to import the Flights dataset into the _flights_ collection in the _flying_ database; if not, see `Basic-Flights/REAME.md`.
-
-At this point, every document in the _flights_ collection corresponds to a single flight. But our goal is to compute the PageRank of commercial airports in the flights network. In order to do so, we need a new collection where every document corresponds to exactly one commercial airport in the U.S. The *transitionMatrix.py* script in `src/` converts the flight documents into documents based on airports. It also formats the output as "value", which smoothes the transition to using the MongoDB MapReduce framework, since all outputs from MongoDB MapReduce are embedded in a "value" field. Lastly, the script also creates a transition matrix (not literally, but in form of MongoDB documents) which tells the probability of going from one airport to any other airport (See [PageRank explanation](http://github.com/10gen-interns/big-data-exploration/wiki/PageRank-on-Flights-Dataset#making-a-graph-of-airports)). This script takes around 6 minutes to run. 
-
-The resulting collection *fpg_0* will be the input to the pagerank script. Even though there's over 6 million flights, there's only actually 319 airports that the flights use. This means that we were able to do a lot of the preformatting in memory in the python program.  
+All data must be converted from the format it's in, to a probability matrix with initial PageRank. You can either put the initial bson file or the output of the erase dead ends as input to this PreFormat MapReduce. Simply change the `mapred.input.dir=<S3 PATH TO YOUR INPUT>` on line 13 of src/PreFormat/run_emr_job.sh and change the `mapred.output.dir=<S3 PATH TO YOUR OUTPUT>` on line 19. If you used your own dataset, you must also set the number of `totalNodes` on line 21 to your own number. 
 
 ### Running the PageRank algorithm
 
-In the `src` directory, start a mongo shell instance connecting to port `$PORT` (`mongo --port <$PORT>`). Then in the shell, use the *flying* collection with `use flying`. Finally execute `load("iteration.js")`. This executes the PageRank algorithm on the flights network stored in *fpg_0*. The PageRank for all commercial airports should converge after 19 iterations (assuming you're using the initial flight dataset we provided).
+In *src/PageRank/run_emr_job.sh*, specify your input and output directories on lines 12 and 13. Your input directory should be the output directory of your PreFormat. Your output directory **MUST end with a `/`**, this is necessary because the pagerank iteration will attempt to create multiple job buckets in this output directory. If you chose your own dataset, you must also set the number of `totalNodes` in src/mapreduce/PageRankMapper.java. The number cannot be passed in as a job config because the jobs are iteratively created in the main class.   
+
+This iterative PageRank will continuously run the PageRank algorithm on the nodes until their values on average change less than 0.1%. This takes around 2.5 hours and 13 iterations with our dataset. You can view the progress in the stdout of the job on Elastic MapReduce. 
 
 ### Results
 
-*airportsInfo.js* prints out each airport PageRank, state, code, and city information to be used in the airports.html page rendering the airport [PageRank map](http://s3.amazonaws.com/big-data-wiki/airports.html) in our results directory.
+To analyze the results, you must download the PageRank outcome to your computer locally and upload them to MongoDB. 
+
+In the MongoDB shell, you can load the src/getMostPageRank.js to print the top PageRank results and their corresponding quotes. 
+
+tldextract is the module we use to correctly parse the url to obtain its domain and subtotal. This is used to see how much pagerank is gathered by each subdomain and domain. To create the subdomain and domain pagerank totals, export your `$PORT` number and `$COLLECTION` as the PageRank result collection name; the `src/domains.py` script will create the collections *subdomain* and *domain* in your *twitter* database. 
+
+We've made two bubble diagrams based on the [bubble cloud d3 example](https://github.com/vlandham/bubble_cloud) with our dataset to show the top subdomains and domains.

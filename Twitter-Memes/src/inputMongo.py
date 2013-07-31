@@ -50,7 +50,7 @@ def parseFile(f):
             if "url" in doc:
                 bulkDocs.append(doc)
 
-            doc = {"_id" : lineSpit[1], "quotes" : [], "links" : []}
+            doc = {"url" : lineSpit[1], "quotes" : [], "links" : []}
 
             if len(bulkDocs) % 10000 == 0:
                 recCount += 10000

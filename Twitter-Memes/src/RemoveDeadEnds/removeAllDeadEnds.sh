@@ -32,7 +32,7 @@ MAX_ITER=200
 #    /output
 #       /erasedDeadEnds0.bson
 #          
-BUCKET="memes-bson"
+BUCKET=$BUCKET
 
 # elastic-mapreduce path
 EMR_PATH="elastic-mapreduce-ruby/elastic-mapreduce"
