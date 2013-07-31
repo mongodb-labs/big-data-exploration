@@ -1,4 +1,4 @@
-package raw;
+package mapreduce;
 import java.io.IOException;
 
 import org.apache.hadoop.io.Text;
@@ -9,10 +9,8 @@ import org.bson.BasicBSONObject;
 import com.mongodb.hadoop.io.BSONWritable;
 
 
-public class RawReducer extends 
+public class PageRankReducer extends 
         Reducer<Text, BSONWritable, Text, BSONObject>{
-    
-    public RawReducer() {};
     
     protected void reduce(Text key, java.lang.Iterable<BSONWritable> values, 
                         Context context) 
