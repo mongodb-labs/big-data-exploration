@@ -16,9 +16,9 @@ There are two ways to import the data.
 
 ======
 #### MongoRestore with BSON 
-Download the bson file [flights.bson.zip](http://s3.amazonaws.com/big-data-wiki/flights.bson.zip). 
+Download the bson file [flights_bson.zip](http://s3.amazonaws.com/big-data-wiki/flights_bson.zip). 
 
-Run `mongorestore --db flying --collection flights --port $PORT <PATH TO>/flights.bson` to import the BSON file into the collection *flights* of the database *flying*. 
+Run `mongorestore --db flying --collection flights --port $PORT <PATH TO>/flights_original.bson` to import the BSON file into the collection *flights* of the database *flying*. 
 
 #### Use our Input Scripts
 
