@@ -1,8 +1,14 @@
-// pagesstrategy.js
-// build data structures to make searching for the presence of
-// urls in the database faster
+/* pagesstrategy.js ->
+ *   Includes functions to build data structures to make searching
+ *   for the presence of urls in the database faster.
+ *   Called "pagestrategy" because it builds "pages" that contains
+ *   all urls that share the first n characters.
+ */
 
-// return all possible keys of length n
+/*
+ * Returns all possible combinations of keys of length n. Only 
+ * characters allowed in url sub-domains are included.
+ */
 var lenNKeys = function(n) {
     if (n == 0) 
 	return [""];
@@ -30,24 +36,34 @@ var lenNKeys = function(n) {
     return keys;
 };
 
+/*
+ * Builds a collection where each document has _id of length n that
+ * indexes all the urls that are prefixed by the first n characters in 
+ * the url (after http:// if any).
+ * Doesn't assume that build(N-1)CharCollection was already called.
+ */
 var buildNCharCollection = function(n) {
     db["char"+n].drop();
     var newcoll = db["char"+n];
     
     var	docs = db.memes2.find().sort({_id : 1});
-    
     var doc = docs.next();
     
     var url = doc["_id"]
     , prefix = null // first n letters of the current doc.value.url
     , c = 0
-    , lastPrefix = doc["_id"].substring(0, n) // the last prefix
+    , lastPrefix = (url.substring(0,4) == "http" ? 
+		    url.substring(7, n) :
+		    url.substring(0, n))
     , bulkData = [url];
     
     while (docs.hasNext()) {
         doc = docs.next();
 	url = doc["_id"];
-	prefix = url.substring(0, n);
+
+	prefix = (url.substring(0,4) == "http" ? 
+		  url.substring(7, n) :
+		  url.substring(0, n));
 	
 	if (prefix != lastPrefix) {
 	    newcoll.insert({_id : lastPrefix, urls : bulkData});
@@ -65,57 +81,12 @@ var buildNCharCollection = function(n) {
     }
 };
 
-var build1CharCollection = function() {
-    db.char1.drop();
-    
-    var newcoll = db.char1;
-    var doc = null;
-    
-    // insert 0-9
-    for (var i = 0; i < 10; i++) {		
-	doc = {_id : String(i), urls : []};
-	newcoll.insert(doc);
-    }
-    
-    // insert a-z
-    for (i = 0; i < 26; i++) {
-	doc = {_id : String.fromCharCode(97+i), urls : []};
-	newcoll.insert(doc);
-    }
-    
-    var	docs = db.memes.find();
-    
-    var urlToInsert = null
-    , firstL = null // get first letter
-    , c = 0;
-    
-    while (docs.hasNext()) {
-	doc = docs.next();
-	url = doc.url;
-	
-	if (url.substring(0, 4) == "http") {
-	    // skip http://
-	    urlToInsert = url.substring(7);	
-	} else {
-	    urlToInsert = url;
-	}
-	firstL = urlToInsert[0];
-	
-	newcoll.update({_id : firstL}
-			, {$push : { 
-			     urls : urlToInsert
-			     }
-			   }
-		      	);
-	c += 1;
-	
-	if (c % 1000 == 0) {
-	    print("Put " + c + " documents so far");
-	}
-    }
-};
-
-// build char(n+1) collection based on char(n) collection
+/*
+ * Builds a collection where each document has _id of length n that
+ * indexes all the urls that are prefixed by the first n characters in 
+ * the url (after http:// if any).
+ * Assumes that build(N-1)CharCollection was already called.
+ */
 var buildNextCharCollection = function(n) {
     db["char"+(n+1)].drop();
     
@@ -143,16 +114,15 @@ var buildNextCharCollection = function(n) {
 	
 	// go through every url in doc
 	for (i in doc.urls) {
+	    // get next letter 
 	    nextL = doc.urls[i][n];
-	    
 	    newcoll.update({_id : doc["_id"] + nextL}
-						 , {$push : { 
-								urls : doc.urls[i]
-							}
-						   }
-						);
+			    , {$push : { 
+				 urls : doc.urls[i]
+			       }
+			    });
+
 	    c += 1;
-	    
 	    if (c % 1000 == 0) {
 		print("Put " + c + " documents so far");
 	    }
@@ -160,13 +130,12 @@ var buildNextCharCollection = function(n) {
     }
 };
 
-// build1CharCollection();
-// buildNextCharCollection(1);
-buildNCharCollection(8);
+// Used to build collection to reduce the set search space of all urls
+// to only urls that share the first 8 characters
+// buildNCharCollection(8);
 
+// If need be, you can build upon the "8Char" collection 
+// to build the "9Char" collection, the "10Char" collection, and so on
+// buildNextCharCollection(8);
 
-
-// query to check if all have http://
-// db.memes.find({ url: /^(http:).*/}).count()
-// NOT ALL DO
 
